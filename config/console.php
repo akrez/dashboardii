@@ -5,7 +5,7 @@ $params = require __DIR__ . '/params.php';
 
 $config = [
     'id' => 'dashboardii-console',
-    'name' => 'اکرز مارکت',
+    'name' => APP_NAME,
     'basePath' => BASE_PATH,
     'language' => 'fa-IR',
     'bootstrap' => ['log'],

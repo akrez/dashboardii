@@ -28,15 +28,18 @@ $config = [
             ],
         ],
         'db' => $params['db'],
-    ],
-    'params' => $params['params'],
-    /*
-    'controllerMap' => [
-        'fixture' => [ // Fixture generation command line.
-            'class' => 'yii\faker\FixtureController',
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            // uncomment if you want to cache RBAC items hierarchy
+            'cache' => 'cache',
         ],
     ],
-    */
+    'params' => $params['params'],
+    'controllerMap' => [
+        'migration' => [
+            'class' => 'bizley\migration\controllers\MigrationController',
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {

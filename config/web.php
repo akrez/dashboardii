@@ -1,6 +1,6 @@
 <?php
 
-$params = require __DIR__.'/params.php';
+$params = require __DIR__ . '/params.php';
 
 $config = [
     'id' => 'dashboardii',
@@ -54,6 +54,11 @@ $config = [
                     'basePath' => '@app/messages',
                 ],
             ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            // uncomment if you want to cache RBAC items hierarchy
+            'cache' => 'cache',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

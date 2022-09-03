@@ -10,6 +10,7 @@ $config = [
     'language' => 'fa-IR',
     'bootstrap' => ['log'],
     'vendorPath' => VENDOR_PATH,
+    'controllerNamespace' => 'app\commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',

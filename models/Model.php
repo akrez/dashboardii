@@ -23,6 +23,8 @@ class Model extends BaseModel
             'captcha' => 'کد تأیید',
             'password' => 'پسورد',
             'remember_me' => 'مرا به خاطر بسپار',
+            'name' => 'نام',
+            'mobile' => 'شماره موبایل',
         ];
     }
 }

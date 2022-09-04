@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\web\IdentityInterface;
 
 /**
@@ -75,5 +76,56 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findUserByEmail($email)
     {
         return User::find()->where(['email' => $email])->one();
+    }
+
+    public static function generatePasswordHash($password)
+    {
+        return Yii::$app->security->generatePasswordHash($password);
+    }
+
+    public static function generateApiToken()
+    {
+        return Yii::$app->security->generateRandomString();
+    }
+
+    public static function validatePassword($password, $passwordHash)
+    {
+        return Yii::$app->security->validatePassword($password, $passwordHash);
+    }
+
+    public static function login(IdentityInterface $identity, $duration = 0)
+    {
+        return Yii::$app->user->login($identity, $duration);
+    }
+
+    public static function generateValidation($attributes, $customValidations = [], $uniqueAttributes = [])
+    {
+        $validations = [];
+
+        foreach ($attributes as $attribute => $isRequired) {
+            if ($attribute == 'email') {
+                $validations[] = [['email'], 'email'];
+            } elseif ($attribute == 'password') {
+                $validations[] = [['password'], 'string', 'strict' => false, 'min' => 6];
+            } elseif ($attribute == 'name') {
+                $validations[] = [['name'], 'string', 'strict' => false, 'min' => 1];
+            } elseif ($attribute == 'mobile') {
+                $validations[] = [['mobile'], 'match', 'pattern' => '/^09[0-9]{9}$/'];
+            }
+            //
+            if ($isRequired) {
+                $validations[] = [[$attribute], 'required'];
+            }
+        }
+
+        foreach ($uniqueAttributes as $attribute) {
+            $validations[] = [[$attribute], 'unique', 'targetClass' => User::class,];
+        }
+
+        return array_merge($validations, $customValidations);
+    }
+
+    public static function deleteUnverifiedTimeoutedBlog()
+    {
     }
 }

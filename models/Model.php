@@ -25,6 +25,7 @@ class Model extends BaseModel
             'remember_me' => 'مرا به خاطر بسپار',
             'name' => 'نام',
             'mobile' => 'شماره موبایل',
+            'title' => 'عنوان',
         ];
     }
 }

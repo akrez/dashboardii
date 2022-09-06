@@ -10,7 +10,7 @@ use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
-class UserController extends Controller
+class UsersController extends Controller
 {
     public function init()
     {

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Url;
 use yii\web\IdentityInterface;
 
 /**
@@ -123,6 +124,11 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return array_merge($validations, $customValidations);
+    }
+
+    public static function getSigninUrl()
+    {
+        return Url::to('users/signin');
     }
 
     public static function deleteUnverifiedTimeoutedBlog()

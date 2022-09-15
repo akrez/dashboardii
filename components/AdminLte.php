@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use app\models\User;
 use Yii;
 use yii\base\Component as BaseComponent;
 use yii\helpers\Html;
@@ -9,44 +10,104 @@ use yii\helpers\Url;
 
 class AdminLte extends BaseComponent
 {
-    public static function isCollapse()
+    private static $titleText;
+    private static $titleLink;
+    private static $logoSrc;
+    private static $menuTitle;
+    private static $navList;
+    private static $menuList;
+
+    //
+
+    public static function setTitleText(?string $text)
     {
-        return Yii::$app->session->get('__sidebar', false);
+        self::$titleText = $text;
     }
+
+    public static function setTitleLink(?string $link)
+    {
+        self::$titleLink = $link;
+    }
+
+    public static function setLogoSrc(?string $link)
+    {
+        self::$logoSrc = $link;
+    }
+
+    public static function setMenuTitle(?string $title)
+    {
+        self::$menuTitle = $title;
+    }
+
+    public static function setNavList(?array $list)
+    {
+        self::$navList = $list;
+    }
+
+    public static function setMenuList(?array $list)
+    {
+        self::$menuList = $list;
+    }
+
+    //
 
     public static function getTitleText()
     {
+        if (null !== self::$titleText) {
+            return  self::$titleText;
+        }
+
         return Yii::$app->name;
     }
 
     public static function getTitleLink()
     {
+        if (null !== self::$titleLink) {
+            return  self::$titleLink;
+        }
+
         return Url::to(['site/index']);
     }
 
-    public static function getLogo()
+    public static function getLogoSrc()
     {
+        if (null !== self::$logoSrc) {
+            return  self::$logoSrc;
+        }
+
+        return null;
         return Yii::getAlias('@web/img/logo.png');
     }
 
     public static function getMenuTitle()
     {
+        if (null !== self::$menuTitle) {
+            return  self::$menuTitle;
+        }
+
         return 'منوی اصلی';
     }
 
     public static function getNavList()
     {
+        if (null !== self::$navList) {
+            return  self::$navList;
+        }
+
         $navs = [];
-        if (Yii::$app->user->getId()) {
+
+        if (Yii::$app->user->isGuest) {
+
             $navs[] = [
-                'link' => Url::toRoute(['/user/signout']),
-                'title' => Yii::t('app', 'Signout'),
-                'options' => ['onclick' => "event.preventDefault(); document.getElementById('logout-form').submit();"],
+                'link' => Url::toRoute(User::getSigninUrl()),
+                'title' => Yii::t('app', 'Signin'),
+                'options' => ['class' => 'pl-0'],
             ];
         } else {
             $navs[] = [
-                'link' => Url::toRoute(['/user/signin']),
-                'title' => Yii::t('app', 'Signin'),
+                'link' => Url::toRoute(['/users/signout']),
+                'title' => Yii::t('app', 'Signout'),
+                'options' => ['onclick' => "event.preventDefault(); document.getElementById('logout-form').submit();"],
             ];
         }
 
@@ -55,26 +116,11 @@ class AdminLte extends BaseComponent
 
     public static function getMenuList()
     {
+        if (null !== self::$menuList) {
+            return  self::$menuList;
+        }
+
         return [
-            [
-                'link' => 'A',
-                'title' => 'AA',
-                'icon' => 'fa fa-user',
-                'items' => [
-                    [
-                        'link' => 'B',
-                        'title' => 'BB',
-                        'icon' => 'fa fa-user',
-                        'items' => [],
-                    ],
-                    [
-                        'link' => 'C',
-                        'title' => 'CC',
-                        'icon' => 'fa fa-user',
-                        'items' => [],
-                    ],
-                ],
-            ],
             [
                 'link' => 'Z',
                 'title' => 'ZZ',
@@ -84,15 +130,16 @@ class AdminLte extends BaseComponent
         ];
     }
 
-    public static function renderNavList($navList, $isVisible = true)
+    public static function isCollapse()
+    {
+        return Yii::$app->session->get('__sidebar', false);
+    }
+
+    public static function renderNavList()
     {
         $result = '';
 
-        if (!$isVisible) {
-            return $result;
-        }
-
-        foreach ($navList as $nav) {
+        foreach (self::getNavList() as $nav) {
             $nav = $nav + [
                 'title' => '',
                 'link' => '',
@@ -104,47 +151,55 @@ class AdminLte extends BaseComponent
         return $result;
     }
 
-    public static function renderTitle($link, $text, $isVisible = true)
+    public static function renderTitle()
     {
         $result = '';
 
-        if (!$isVisible) {
-            return $result;
+        $text = self::getTitleText();
+        $link = self::getTitleLink();
+
+        if ($text) {
+            $logoMini = '<span class="logo-mini">' . Html::tag('b', mb_substr($text, 0, 1)) . '</span>';
+            $logo = '<span class="logo-lg">' . Html::tag('b', $text) . '</span>';
+
+            $result = Html::a($logoMini . $logo, $link, ['class' => 'logo']);
         }
-
-        $logoMini = '<span class="logo-mini">' . Html::tag('b', mb_substr($text, 0, 1)) . '</span>';
-        $logo = '<span class="logo-lg">' . Html::tag('b', $text) . '</span>';
-
-        $result = Html::a($logoMini . $logo, $link, ['class' => 'logo']);
 
         return $result;
     }
 
-    public static function renderLogo($logo, $isVisible = true)
+    public static function renderLogo()
     {
         $result = '';
 
-        if (!$isVisible) {
-            return $result;
-        }
-
-        if ($logo) {
-            $result = '<div class="header" style="padding-left: 10px;padding-right: 10px;">' . Html::img($logo, [
+        $logoSrc = self::getLogoSrc();
+        if ($logoSrc) {
+            $result = '<div class="user-panel"><div class="header" style="padding-left: 10px;padding-right: 10px;">' . Html::img($logoSrc, [
                 'class' => 'img img-responsive',
                 'style' => 'min-width: 100%;',
-            ]) . '</div>';
+            ]) . '</div></div>';
         }
 
         return $result;
     }
 
-    public static function renderMenuTitle($menuTitle, $isVisible = true)
+    public static function renderMenu()
     {
         $result = '';
 
-        if (!$isVisible) {
-            return $result;
+        $menuList = AdminLte::renderMenuList();
+        if ($menuList) {
+            $result = '<ul class="sidebar-menu">' . AdminLte::renderMenuTitle() . $menuList . '</ul>';
         }
+
+        return $result;
+    }
+
+    private static function renderMenuTitle()
+    {
+        $result = '';
+
+        $menuTitle = self::getMenuTitle();
 
         if ($menuTitle) {
             $result = Html::tag('li', $menuTitle, ['class' => 'header']);
@@ -153,16 +208,13 @@ class AdminLte extends BaseComponent
         return $result;
     }
 
-    public static function renderMenuList($menuList, $isVisible = true)
+    private static function renderMenuList()
     {
         $result = '';
 
-        if (!$isVisible) {
-            return $result;
-        }
-
+        $menuList = self::getMenuList();
         foreach ($menuList as $menu) {
-            $result .= static::renderMenuLi($menu);
+            $result .= self::renderMenuLi($menu);
         }
 
         return $result;
@@ -179,7 +231,7 @@ class AdminLte extends BaseComponent
 
         $append = '';
         foreach ($menu['items'] as $menuItem) {
-            $append .= static::renderMenuLi($menuItem);
+            $append .= self::renderMenuLi($menuItem);
         }
 
         $appendTag = '';

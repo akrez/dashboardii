@@ -18,7 +18,7 @@ class MenuChartSearch extends MenuChart
     {
         return [
             [['id', 'menu_id', 'priority', 'chart_width_12'], 'integer'],
-            [['chart_group_by', 'chart_where_like', 'chart_select', 'deleted_at', 'created_at', 'updated_at'], 'safe'],
+            [['chart_axis_y', 'chart_where_like', 'chart_axis_x', 'chart_aggregation', 'deleted_at', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -50,7 +50,7 @@ class MenuChartSearch extends MenuChart
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'id' => SORT_ASC,
+                    'priority' => SORT_DESC,
                 ]
             ],
             'pagination' => false,
@@ -75,9 +75,10 @@ class MenuChartSearch extends MenuChart
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'chart_group_by', $this->chart_group_by])
+        $query->andFilterWhere(['like', 'chart_axis_y', $this->chart_axis_y])
             ->andFilterWhere(['like', 'chart_where_like', $this->chart_where_like])
-            ->andFilterWhere(['like', 'chart_select', $this->chart_select]);
+            ->andFilterWhere(['like', 'chart_axis_x', $this->chart_axis_x])
+            ->andFilterWhere(['like', 'chart_aggregation', $this->chart_aggregation]);
 
         return $dataProvider;
     }

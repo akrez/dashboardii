@@ -10,7 +10,6 @@ class AdminLte extends BaseComponent
     protected static $titleText;
     protected static $titleLink;
     protected static $logoSrc;
-    protected static $menuTitle;
     protected static $navList;
     protected static $menuList;
     protected static $collapse;
@@ -28,11 +27,6 @@ class AdminLte extends BaseComponent
     public static function setLogoSrc(?string $link)
     {
         static::$logoSrc = $link;
-    }
-
-    public static function setMenuTitle(?string $title)
-    {
-        static::$menuTitle = $title;
     }
 
     public static function setNavList(?array $list)
@@ -58,11 +52,6 @@ class AdminLte extends BaseComponent
     public static function getLogoSrc()
     {
         return static::$logoSrc;
-    }
-
-    public static function getMenuTitle()
-    {
-        return static::$menuTitle;
     }
 
     public static function getNavList()
@@ -136,35 +125,7 @@ class AdminLte extends BaseComponent
         return $result;
     }
 
-    public static function renderMenu()
-    {
-        $result = '';
-
-        $menuList = static::renderMenuList();
-        if (empty($menuList)) {
-            return $result;
-        }
-
-        $result = '<ul class="sidebar-menu">' . static::renderMenuTitle() . $menuList . '</ul>';
-
-        return $result;
-    }
-
-    protected static function renderMenuTitle()
-    {
-        $result = '';
-
-        $menuTitle = static::getMenuTitle();
-        if (empty($menuTitle)) {
-            return $result;
-        }
-
-        $result = Html::tag('li', $menuTitle, ['class' => 'header']);
-
-        return $result;
-    }
-
-    protected static function renderMenuList()
+    public static function renderMenuList()
     {
         $result = '';
 
@@ -177,11 +138,17 @@ class AdminLte extends BaseComponent
             $result .= static::renderMenuLi($menu);
         }
 
+        $result = '<ul class="sidebar-menu">' . $result . '</ul>';
+
         return $result;
     }
 
     protected static function renderMenuLi($menu)
     {
+        if (is_string($menu)) {
+            return Html::tag('li', $menu, ['class' => 'header']);
+        }
+
         $menu = $menu + [
             'title' => null,
             'icon' => null,

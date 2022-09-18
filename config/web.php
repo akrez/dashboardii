@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/functions.php';
+
 $params = require __DIR__ . '/params.php';
 
 $config = [
@@ -59,6 +61,9 @@ $config = [
             'class' => 'yii\rbac\DbManager',
             // uncomment if you want to cache RBAC items hierarchy
             'cache' => 'cache',
+        ],
+        'formatter' => [
+            'class' => 'app\components\Formatter',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

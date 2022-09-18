@@ -34,3 +34,4 @@ tests/_support/_generated
 
 /config/constants.php
 /config/params.php
+/config/functions.php

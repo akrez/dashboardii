@@ -17,8 +17,8 @@ class MenuChartSearch extends MenuChart
     public function rules()
     {
         return [
-            [['id', 'menu_id', 'priority', 'chart_width_12'], 'integer'],
-            [['chart_axis_y', 'chart_where_like', 'chart_axis_x', 'chart_aggregation', 'deleted_at', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'priority', 'menu_id', 'chart_width_12'], 'integer'],
+            [['title', 'chart_aggregation', 'chart_axis_x', 'chart_where_like', 'chart_axis_y', 'chart_type', 'deleted_at', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -40,11 +40,7 @@ class MenuChartSearch extends MenuChart
      */
     public function search($params, $parentModel)
     {
-        $query = MenuChart::find()
-            ->andWhere(['menu_id' => $parentModel->id])
-            ->andWhere(['deleted_at' => null]);
-
-        // add conditions that should always apply here
+        $query = MenuChart::getMenuChartBaseFindQuery($parentModel->id);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -56,6 +52,7 @@ class MenuChartSearch extends MenuChart
             'pagination' => false,
         ]);
 
+        // add conditions that should always apply here
         $this->load($params);
 
         if (!$this->validate()) {
@@ -67,18 +64,20 @@ class MenuChartSearch extends MenuChart
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'menu_id' => $this->menu_id,
             'priority' => $this->priority,
+            'menu_id' => $this->menu_id,
             'chart_width_12' => $this->chart_width_12,
             'deleted_at' => $this->deleted_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'chart_axis_y', $this->chart_axis_y])
-            ->andFilterWhere(['like', 'chart_where_like', $this->chart_where_like])
+        $query->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'chart_aggregation', $this->chart_aggregation])
             ->andFilterWhere(['like', 'chart_axis_x', $this->chart_axis_x])
-            ->andFilterWhere(['like', 'chart_aggregation', $this->chart_aggregation]);
+            ->andFilterWhere(['like', 'chart_where_like', $this->chart_where_like])
+            ->andFilterWhere(['like', 'chart_axis_y', $this->chart_axis_y])
+            ->andFilterWhere(['like', 'chart_type', $this->chart_type]);
 
         return $dataProvider;
     }

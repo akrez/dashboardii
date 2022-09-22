@@ -26,6 +26,19 @@ class Model extends BaseModel
             'name' => 'نام',
             'mobile' => 'شماره موبایل',
             'title' => 'عنوان',
+            'menu_id' => 'منو',
+            'deleted_at' => 'تاریخ حذف',
+            'submenu' => 'ساب منو به ازای هر',
+            'chart_axis_y' => 'محور عمودی',
+            'chart_where_like' => 'ردیف هایی نمایش داده شوند که',
+            'chart_axis_x' => 'محور افقی',
+            'chart_aggregation' => 'نتیجه بر اساس',
+            'priority' => 'اولویت',
+            'chart_width_12' => 'سهم عرض از 12',
+            'content' => 'محتوا',
+            'chart_type' => 'نوع چارت',
+            'grid_where_like' => 'مقادیری در جدول نمایش',
+            'user_id' => 'کاربر',
         ];
     }
 }

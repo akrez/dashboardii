@@ -5,16 +5,17 @@ namespace app\models;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "{{%menu_charts}}".
+ * This is the model class for table "menu_charts".
  *
  * @property int $id
- * @property int $menu_id
  * @property string $title
- * @property string|null $chart_axis_y
- * @property string|null $chart_where_like
- * @property string|null $chart_axis_x
  * @property string|null $chart_aggregation
+ * @property string|null $chart_axis_x
+ * @property string|null $chart_where_like
+ * @property string|null $chart_axis_y
  * @property int|null $priority
+ * @property string $chart_type
+ * @property int $menu_id
  * @property int $chart_width_12
  * @property string|null $deleted_at
  * @property string|null $created_at
@@ -47,6 +48,8 @@ class MenuChart extends ActiveRecord
             [['chart_axis_x'], 'required'],
             [['chart_axis_x'], 'in', 'range' => Menu::getPossibleHeadersList()],
             [['chart_axis_y'], 'in', 'range' => Menu::getPossibleHeadersList()],
+            [['chart_type'], 'required'],
+            [['chart_type'], 'in', 'range' => array_keys(static::getMenuChartTypesList())],
             [['chart_aggregation'], 'in', 'range' => array_keys(static::getMenuChartAggregationsList())],
             [['chart_where_like'], 'string', 'max' => 12],
         ];
@@ -81,6 +84,23 @@ class MenuChart extends ActiveRecord
     public static function getMenuChartAggregationTitle($item)
     {
         $list = static::getMenuChartAggregationsList();
+        if (isset($list[$item])) {
+            return $list[$item];
+        }
+        return '';
+    }
+
+    public static function getMenuChartTypesList()
+    {
+        return [
+            'bar' => 'ستونی',
+            'pie' => 'پای',
+        ];
+    }
+
+    public static function getMenuChartTypeTitle($item)
+    {
+        $list = static::getMenuChartTypesList();
         if (isset($list[$item])) {
             return $list[$item];
         }

@@ -20,9 +20,9 @@ class m220922_180930_create_table_menus extends Migration
                 'headers' => $this->text(),
                 'submenu' => $this->string(12),
                 'grid_where_like' => $this->string(12),
-                'deleted_at' => $this->timestamp(),
-                'created_at' => $this->timestamp(),
-                'updated_at' => $this->timestamp(),
+                'deleted_at' => $this->timestamp()->null(),
+                'created_at' => $this->timestamp()->null(),
+                'updated_at' => $this->timestamp()->null(),
             ],
             $tableOptions
         );

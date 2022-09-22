@@ -19,7 +19,7 @@ class m220922_180933_create_table_menu_visits extends Migration
                 'menu_id' => $this->bigInteger()->unsigned(),
                 'submenu' => $this->string(),
                 'user_agent' => $this->string(2048),
-                'created_at' => $this->timestamp(),
+                'created_at' => $this->timestamp()->null(),
             ],
             $tableOptions
         );

@@ -17,13 +17,13 @@ class m220922_180929_create_table_users extends Migration
                 'id' => $this->bigPrimaryKey()->unsigned(),
                 'name' => $this->string()->notNull(),
                 'email' => $this->string()->notNull(),
-                'email_verified_at' => $this->timestamp(),
+                'email_verified_at' => $this->timestamp()->null(),
                 'password' => $this->string()->notNull(),
                 'remember_token' => $this->string(100),
                 'api_token' => $this->string(80),
                 'mobile' => $this->string(15)->notNull(),
-                'created_at' => $this->timestamp(),
-                'updated_at' => $this->timestamp(),
+                'created_at' => $this->timestamp()->null(),
+                'updated_at' => $this->timestamp()->null(),
             ],
             $tableOptions
         );

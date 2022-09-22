@@ -24,9 +24,9 @@ class m220922_180931_create_table_menu_charts extends Migration
                 'chart_type' => $this->string(12)->notNull(),
                 'menu_id' => $this->bigInteger()->unsigned()->notNull(),
                 'chart_width_12' => $this->tinyInteger(4)->notNull(),
-                'deleted_at' => $this->timestamp(),
-                'created_at' => $this->timestamp(),
-                'updated_at' => $this->timestamp(),
+                'deleted_at' => $this->timestamp()->null(),
+                'created_at' => $this->timestamp()->null(),
+                'updated_at' => $this->timestamp()->null(),
             ],
             $tableOptions
         );

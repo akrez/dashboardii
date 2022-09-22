@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m220906_192314_create_table_menus extends Migration
+class m220922_180930_create_table_menus extends Migration
 {
     public function safeUp()
     {
@@ -14,9 +14,13 @@ class m220906_192314_create_table_menus extends Migration
         $this->createTable(
             '{{%menus}}',
             [
-                'id' => $this->primaryKey(),
+                'id' => $this->bigPrimaryKey()->unsigned(),
                 'title' => $this->string()->notNull(),
                 'user_id' => $this->bigInteger()->unsigned()->notNull(),
+                'headers' => $this->text(),
+                'submenu' => $this->string(12),
+                'grid_where_like' => $this->string(12),
+                'deleted_at' => $this->timestamp(),
                 'created_at' => $this->timestamp(),
                 'updated_at' => $this->timestamp(),
             ],

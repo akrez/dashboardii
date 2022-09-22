@@ -1,5 +1,6 @@
 <?php
 
+use app\components\Formatter;
 use yii\web\View;
 use yii\widgets\Pjax;
 use app\widgets\Alert;
@@ -74,8 +75,7 @@ Pjax::begin([
 </div>
 <div class="row">
     <?php
-    $newFormContent = $newForm();
-    if ($newFormContent) {
+    if (isset($newForm) and $newFormContent = $newForm()) {
     ?>
         <div class="col-sm-12">
             <div class="panel panel-success">
@@ -89,14 +89,14 @@ Pjax::begin([
         <div class="panel panel-primary">
             <?php
             echo GridView::widget([
-                'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => ''],
+                'formatter' => ['class' => Formatter::class, 'nullDisplay' => ''],
                 'layout' => '{items}',
                 'tableOptions' => ['class' => 'table table-bordered table-striped'],
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'options' => ['class' => 'table-responsive'],
                 'columns' => $columns,
-                'afterRow' => $afterRow,
+                'afterRow' => (isset($afterRow) ? $afterRow : null),
             ]);
             ?>
         </div>

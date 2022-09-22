@@ -7,62 +7,13 @@ use app\assets\AdminLteAsset;
 use app\components\AdminLteCustom;
 use app\widgets\Alert;
 use yii\helpers\Html;
-use yii\web\View;
 
 AdminLteAsset::register($this);
 //
-$this->registerJs("
-$(document).on('click','.btn[toggle]',function() {
-
-    var btn = $(this);
-    var isHidden = $(btn.attr('toggle')).is(':hidden');    
-
-    $('.btn[toggle]').each(function(i) {
-        var toggleBtn = $(this);
-        $(toggleBtn.attr('toggle')).hide();
-        toggleBtn.addClass('btn-default');
-        toggleBtn.removeClass('btn-warning');
-    });
-
-    if(isHidden) {
-        $(btn.attr('toggle')).show();
-        btn.addClass('btn-warning');
-        btn.removeClass('btn-default');
-    }
-
-});
-$(document).on('pjax:beforeSend', function(xhr, options) {
-    $('.ajax-splash-show').css('display','inline-block');
-    $('.ajax-splash-hide').css('display','none');
-});
-$(document).on('pjax:complete', function(xhr, textStatus, options) {
-    $('.ajax-splash-show').css('display','none');
-    $('.ajax-splash-hide').css('display','inline-block');
-});
-", View::POS_READY);
 $this->registerCss("
-.splash-style {
-    background-image: url('" . Yii::getAlias('@web/img/loading.svg') . "');
-    display: none;
-    background-color: rgba(0, 0, 0, 0.67);
-    inset: 0px;
-    position: absolute;
-    z-index: 9998;
-    background-repeat: no-repeat;
-    background-position: center;
-}
 .sidebar-mini.sidebar-collapse .user-panel {
     display: none !important;
     -webkit-transform: translateZ(0);
-}
-.table th {
-    vertical-align: top !important;
-}
-.table td {
-    vertical-align: middle !important;
-}
-.position-relative {
-    .position: relative;
 }
 ");
 //
@@ -109,13 +60,12 @@ $this->title = Html::encode($this->title ? $this->title : Yii::$app->name);
             <aside class="main-sidebar direction">
                 <section class="sidebar">
                     <?php echo AdminLteCustom::renderLogo(); ?>
-                    <?php echo AdminLteCustom::renderMenu(); ?>
+                    <?php echo AdminLteCustom::renderMenuList(); ?>
                 </section>
             </aside>
         </aside>
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper position-relative">
-            <div class="ajax-splash-show splash-style"></div>
             <!-- Content Header (Page header) -->
             <div class="col-xs-12">
                 <br />

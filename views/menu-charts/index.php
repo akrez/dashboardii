@@ -1,9 +1,16 @@
 <?php
 
+use app\models\MenuChart;
 use yii\helpers\Html;
 
 $columns = [
     'title',
+    [
+        'attribute' => 'chart_type',
+        'value' => function (?MenuChart $dataProviderModel) use ($parentModel) {
+            return $dataProviderModel::getMenuChartTypeTitle($dataProviderModel->chart_type);
+        },
+    ],
     'priority',
     'chart_width_12',
     //

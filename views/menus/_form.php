@@ -1,8 +1,14 @@
 <?php
 
+use app\models\Menu;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+
+/**
+ *
+ * @var Menu $model
+ */
 
 $form = ActiveForm::begin([
     'options' => ['data-pjax' => true],
@@ -21,6 +27,21 @@ $form = ActiveForm::begin([
         <div class="col-sm-6">
             <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
         </div>
+        <div class="col-sm-6">
+            <?= $form->field($model, 'grid_where_like')->dropDownList($model->getMenuGridWhereLikesList()) ?>
+        </div>
+        <?php if ($model->getHeadersList()) { ?>
+            <div class="col-sm-4">
+                <?= $form->field($model, 'submenu')->dropDownList($model->getHeadersList(), [
+                    'prompt' => [
+                        'text' => '',
+                        'options' => [
+                            'value' => null,
+                        ],
+                    ],
+                ]) ?>
+            </div>
+        <?php } ?>
     </div>
     <div class="row">
         <div class="col-sm-2">

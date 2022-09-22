@@ -28,9 +28,10 @@ $form = ActiveForm::begin([
             <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-sm-3">
-            <?= $form->field($model, 'priority')->textInput(['type' => 'number']) ?>
+            <?= $form->field($model, 'chart_type')->dropDownList(MenuChart::getMenuChartTypesList()) ?>
         </div>
         <div class="col-sm-3">
+            <?= $form->field($model, 'priority')->textInput(['type' => 'number']) ?>
         </div>
         <div class="col-sm-3">
             <?= $form->field($model, 'chart_width_12')->textInput(['type' => 'number']) ?>

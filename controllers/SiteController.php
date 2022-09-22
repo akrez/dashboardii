@@ -7,7 +7,6 @@ class SiteController extends Controller
     public function init()
     {
         parent::init();
-        $this->layout = 'site';
     }
 
     /**
@@ -36,7 +35,7 @@ class SiteController extends Controller
             ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'fixedVerifyCode' => (YII_ENV_TEST || YII_ENV_DEV) ? 'testme' : null,
             ],
         ];
     }

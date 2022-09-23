@@ -4,10 +4,8 @@ namespace app\controllers;
 
 use app\models\User;
 use app\models\UserSignin;
-use app\models\UserSignup;
-use Throwable;
+use app\models\UserSignupForm;
 use Yii;
-use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
 class UsersController extends Controller
@@ -67,8 +65,8 @@ class UsersController extends Controller
     {
         User::deleteUnverifiedTimeoutedBlog();
 
-        $model = new UserSignup();
-        if ($model->load(Yii::$app->request->post()) and $model->validate() and $model->getUser()) {
+        $model = new UserSignupForm();
+        if ($model->load(Yii::$app->request->post()) and $model->signup()) {
             User::login($model->getUser());
             return $this->goBack();
         }

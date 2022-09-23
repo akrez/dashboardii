@@ -70,6 +70,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 '<controller:[\w\-]+>/<action:[\w\-]+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:[\w\-]+>/<action:[\w\-]+>/<param>' => '<controller>/<action>',
                 '<controller:[\w\-]+>/<action:[\w\-]+>' => '<controller>/<action>',
                 '<controller:[\w\-]+>/' => '<controller>/index',
                 '' => 'site/index',

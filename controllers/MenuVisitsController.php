@@ -16,11 +16,6 @@ use yii\helpers\Html;
  */
 class MenuVisitsController extends Controller
 {
-    public function init()
-    {
-        parent::init();
-    }
-
     public function behaviors()
     {
         return $this->defaultBehaviors([

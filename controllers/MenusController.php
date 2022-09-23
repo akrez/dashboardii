@@ -9,11 +9,6 @@ use Yii;
 
 class MenusController extends Controller
 {
-    public function init()
-    {
-        parent::init();
-    }
-
     public function behaviors()
     {
         return $this->defaultBehaviors([

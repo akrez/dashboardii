@@ -13,11 +13,6 @@ use Yii;
  */
 class MenuChartsController extends Controller
 {
-    public function init()
-    {
-        parent::init();
-    }
-
     public function behaviors()
     {
         return $this->defaultBehaviors([

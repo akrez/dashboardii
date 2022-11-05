@@ -35,7 +35,7 @@ class MenuVisitsController extends Controller
      */
     public function actionIndex($parent_id)
     {
-        $parentModel = Crud::findOrFail(Menu::find()->andWhere(['id' => $parent_id]));
+        $parentModel = Crud::findOrFail(Menu::getMenuBaseFindQuery(null, $parent_id));
 
         $searchModel = new MenuVisitSearch();
         $dataProvider = $searchModel->search($this->request->queryParams, $parentModel);

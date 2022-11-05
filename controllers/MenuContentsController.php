@@ -35,7 +35,7 @@ class MenuContentsController extends Controller
         $model = null;
         $newModel = new MenuContentImport();
         $searchModel = new MenuContentSearch();
-        $parentModel = Crud::findOrFail(Menu::find()->andWhere(['id' => $parent_id]));
+        $parentModel = Crud::findOrFail(Menu::getMenuBaseFindQuery(null,$parent_id));
         //
         if (Yii::$app->request->isPost) {
             if ($state == 'import' and $newModel->load($post) and $newModel->import($parentModel)) {

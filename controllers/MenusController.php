@@ -30,7 +30,7 @@ class MenusController extends Controller
         $parentModel = null;
         //
         if ($id) {
-            $model = Crud::findOrFail(Menu::find()->andWhere(['id' => $id]));
+            $model = Crud::findOrFail(Menu::getMenuBaseFindQuery(null,$id));
         } else {
             $model = null;
         }
@@ -46,6 +46,8 @@ class MenusController extends Controller
                 $updateCacheNeeded = Crud::store($model, $post, [
                     'user_id' => Yii::$app->user->getId(),
                 ]);
+            } elseif ($state == 'remove' && $model) {
+                $updateCacheNeeded = Crud::softDelete($model);
             }
             if ($updateCacheNeeded) {
                 $newModel = new Menu();

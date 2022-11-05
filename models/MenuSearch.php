@@ -40,13 +40,13 @@ class MenuSearch extends Menu
      */
     public function search($params)
     {
-        $query = Menu::find();
+        $query = Menu::getMenuBaseFindQuery();
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => ['defaultOrder' => ['id' => SORT_DESC,]],
-            'pagination' => ['pagesize' => 5,]
+            'pagination' => ['pagesize' => 20,]
         ]);
 
         $this->load($params);

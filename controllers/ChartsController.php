@@ -71,9 +71,7 @@ class ChartsController extends Controller
 
         $id = $menu->id;
 
-        $menuCharts = MenuChart::find()
-            ->andWhere(['menu_id' => $id])
-            ->andWhere(['deleted_at' => null])
+        $menuCharts = MenuChart::getMenuChartBaseFindQuery($id)
             ->orderBy(['priority' => SORT_DESC])
             ->all();
 
@@ -108,7 +106,7 @@ class ChartsController extends Controller
 
     private static function getChartInfo(MenuChart $menuChart, ?string $submenuTitle = null)
     {
-        $menu = Crud::findOrFail(Menu::find()->andWhere(['id' => $menuChart->menu_id])->andWhere(['deleted_at' => null]));
+        $menu = Crud::findOrFail(Menu::getMenuBaseFindQuery(null, $menuChart->menu_id));
 
         $query = MenuContent::getMenuContentBaseQuery($menu->id);
         //chart_axis_x and chart_aggregation

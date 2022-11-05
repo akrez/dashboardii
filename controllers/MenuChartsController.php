@@ -39,7 +39,7 @@ class MenuChartsController extends Controller
         }
         $newModel = new MenuChart();
         $searchModel = new MenuChartSearch();
-        $parentModel = Crud::findOrFail(Menu::find()->andWhere(['id' => $parent_id]));
+        $parentModel = Crud::findOrFail(Menu::getMenuBaseFindQuery(null, $parent_id));
         //
         if (Yii::$app->request->isPost) {
             if ($state == 'create' && $newModel->load($post)) {
@@ -50,6 +50,8 @@ class MenuChartsController extends Controller
                 $updateCacheNeeded = Crud::store($model, $post, [
                     'menu_id' => $parent_id,
                 ]);
+            } elseif ($state == 'remove' && $model) {
+                $updateCacheNeeded = Crud::softDelete($model);
             }
             if ($updateCacheNeeded) {
                 $newModel = new MenuChart();

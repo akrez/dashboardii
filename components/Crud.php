@@ -19,6 +19,12 @@ class Crud extends BaseComponent
         return $newModel->save();
     }
 
+    public static function softDelete(&$model)
+    {
+        $model->deleted_at = \date('Y-m-d H:i:s');
+        return $model->save(false);
+    }
+
     public static function findOrFail(ActiveQuery $query)
     {
         $model = $query->one();

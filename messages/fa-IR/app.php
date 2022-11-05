@@ -12,6 +12,7 @@ return [
     'Menu Chart' => 'چارت منو',
     'Menu Visits' => 'بازدیدهای منو',
     //
+    'Remove' => 'حذف',
     'Create' => 'ایجاد',
     'Update' => 'ویرایش',
     'Edit' => 'ویرایش کنید',

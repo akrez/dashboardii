@@ -28,4 +28,5 @@ echo $this->render('/layouts/grid', [
     'pagination' => $dataProvider->getPagination(),
     'afterRow' => $afterRow,
     'columns' => $columns,
+    'showGridViewSummary' => true,
 ]);

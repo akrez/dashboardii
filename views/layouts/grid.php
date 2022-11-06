@@ -88,15 +88,22 @@ Pjax::begin([
     <div class="col-sm-12">
         <div class="panel panel-primary">
             <?php
+            $gridViewLayouts = [];
+            $gridViewLayouts[] = "{items}";
+            if (isset($showGridViewSummary) and $showGridViewSummary) {
+                $gridViewLayouts[] = "{summary}";
+            }
+            //
             echo GridView::widget([
                 'formatter' => ['class' => Formatter::class, 'nullDisplay' => ''],
-                'layout' => '{items}',
+                'layout' => implode("\n", $gridViewLayouts),
                 'tableOptions' => ['class' => 'table table-bordered table-striped'],
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'options' => ['class' => 'table-responsive'],
                 'columns' => $columns,
                 'afterRow' => (isset($afterRow) ? $afterRow : null),
+                'summaryOptions' => ['class' => 'panel-footer',],
             ]);
             ?>
         </div>

@@ -38,11 +38,11 @@ $form = ActiveForm::begin([
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <?= $form->field($model, 'chart_axis_x')->dropDownList($parentModel->getHeadersList()) ?>
         </div>
-        <div class="col-sm-4">
-            <?= $form->field($model, 'chart_axis_y')->dropDownList($parentModel->getHeadersList(), [
+        <div class="col-sm-3">
+            <?= $form->field($model, 'chart_group_by')->dropDownList($parentModel->getHeadersList(), [
                 'prompt' => [
                     'text' => '',
                     'options' => [
@@ -51,8 +51,11 @@ $form = ActiveForm::begin([
                 ],
             ]) ?>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <?= $form->field($model, 'chart_aggregation')->dropDownList(MenuChart::getMenuChartAggregationsList()) ?>
+        </div>
+        <div class="col-sm-3">
+            <?= $form->field($model, 'chart_axis_y')->dropDownList($parentModel->getHeadersList()) ?>
         </div>
     </div>
     <div class="row">

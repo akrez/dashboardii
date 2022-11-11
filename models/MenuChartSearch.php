@@ -18,7 +18,7 @@ class MenuChartSearch extends MenuChart
     {
         return [
             [['id', 'priority', 'menu_id', 'chart_width_12'], 'integer'],
-            [['title', 'chart_aggregation', 'chart_axis_x', 'chart_where_like', 'chart_axis_y', 'chart_type', 'deleted_at', 'created_at', 'updated_at'], 'safe'],
+            [['title', 'chart_aggregation', 'chart_axis_x', 'chart_where_like', 'chart_axis_y', 'chart_group_by', 'chart_type', 'deleted_at', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -77,6 +77,7 @@ class MenuChartSearch extends MenuChart
             ->andFilterWhere(['like', 'chart_axis_x', $this->chart_axis_x])
             ->andFilterWhere(['like', 'chart_where_like', $this->chart_where_like])
             ->andFilterWhere(['like', 'chart_axis_y', $this->chart_axis_y])
+            ->andFilterWhere(['like', 'chart_group_by', $this->chart_group_by])
             ->andFilterWhere(['like', 'chart_type', $this->chart_type]);
 
         return $dataProvider;

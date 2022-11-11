@@ -69,6 +69,10 @@ if ($gridDataProvider) {
     let charts = <?= json_encode($charts) ?>;
 
     function encodeURIComponent(input) {
+        let isScalar = (typeof input == 'string' || typeof input == 'number');
+        if (!isScalar) {
+            return '';
+        }
         return input.toString()
             .replace(/\&/g, '&amp;')
             .replace(/\</g, '&lt;')
@@ -90,32 +94,57 @@ if ($gridDataProvider) {
         return "rgba(" + r + "," + g + "," + b + ",0.35)";
     };
 
+    rainbowColorsList = [
+        'rgba(255,  99, 132, 0.2)',
+        'rgba(255, 159,  64, 0.2)',
+        'rgba(255, 205,  86, 0.2)',
+        'rgba( 75, 192, 192, 0.2)',
+        'rgba( 54, 162, 235, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(201, 203, 207, 0.2)'
+    ];
+
+    var getRainbowColors = function(count) {
+        let result = [];
+        for (let index = 0; index < count; index++) {
+            result.push(rainbowColorsList[index % 7]);
+        }
+        return result;
+    };
+
+    var getRainbowColor = function(index) {
+        return rainbowColorsList[index % 7];
+    };
+
     document.addEventListener("DOMContentLoaded", function(event) {
 
         function drawChartBarSingleDataset(id, title, labels, data, backgroundColor = null) {
 
-            var backgroundColors = [];
-            if (backgroundColor === null) {
-                for (var i in data) {
-                    backgroundColors.push(dynamicColors());
-                }
+            let datasets = [];
+            let colorIndex = 0;
+            let hasSingleDataset = (data.length <= 1);
+            for (dataItemKey in data) {
+                datasets.push({
+                    label: data[dataItemKey].label,
+                    data: data[dataItemKey].data,
+                    borderWidth: 1,
+                    backgroundColor: (hasSingleDataset ? getRainbowColors(data[dataItemKey].data.length) : getRainbowColor(colorIndex)),
+                });
+                colorIndex++;
             }
 
             var config = {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: title,
-                        data: data,
-                        backgroundColor: backgroundColors,
-                        borderWidth: 1
-                    }]
+                    datasets: datasets
                 },
                 options: {
+                    plugins: {
+                        labels: false
+                    },
                     responsive: true,
                     maintainAspectRatio: false,
-                    legend: false,
                     animation: {
                         duration: 1,
                         onComplete: function() {
@@ -133,10 +162,6 @@ if ($gridDataProvider) {
                                 });
                             });
                         }
-                    },
-                    title: {
-                        display: true,
-                        text: " "
                     },
                     tooltips: {
                         mode: 'index',
@@ -157,51 +182,40 @@ if ($gridDataProvider) {
                 },
                 defaultFontFamily: Chart.defaults.global.defaultFontFamily = "'Sahel'",
             };
+
+            if (hasSingleDataset) {
+                config.options.legend = false;
+            }
+
             var ctx = document.getElementById(id).getContext('2d');
             new Chart(ctx, config);
         }
 
         function drawChartPieSingleDataset(id, title, labels, data, backgroundColor = null) {
 
-            if (backgroundColor === null) {
-                if (data.count > 7) {
-                    var backgroundColor = [];
-                    for (var i in data) {
-                        backgroundColor.push(dynamicColors());
-                    }
-                } else {
-                    backgroundColor = [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(201, 203, 207, 0.2)'
-                    ];
-                }
+            let datasets = [];
+            let colorIndex = 0;
+            let hasSingleDataset = (data.length <= 1);
+            for (dataItemKey in data) {
+                datasets.push({
+                    label: data[dataItemKey].label,
+                    data: data[dataItemKey].data,
+                    borderWidth: 1,
+                    backgroundColor: (hasSingleDataset ? getRainbowColors(data[dataItemKey].data.length) : getRainbowColor(colorIndex)),
+                });
+                colorIndex++;
             }
 
             var config = {
                 type: 'pie',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: title,
-                        data: data,
-                        backgroundColor: backgroundColor,
-                        borderWidth: 1,
-                        hoverOffset: 4
-                    }]
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     legend: false,
-                    title: {
-                        display: true,
-                        text: " "
-                    },
                     tooltips: {
                         mode: 'index',
                         intersect: false,
@@ -214,6 +228,11 @@ if ($gridDataProvider) {
                 },
                 defaultFontFamily: Chart.defaults.global.defaultFontFamily = "'Sahel'",
             };
+
+            if (hasSingleDataset) {
+                config.options.legend = false;
+            }
+
             var ctx = document.getElementById(id).getContext('2d');
             new Chart(ctx, config);
         }
@@ -223,16 +242,20 @@ if ($gridDataProvider) {
 
             let footer = '';
             if ("pie" === chart.chart_type) {
-                footer += ` <div class="box-footer no-padding"> <ul class="nav nav-pills nav-stacked"> `
-                Object.keys(chart.axis_x).forEach(chartAxisXKey => {
-                    footer += `<li>
-                        <a href="#">
-                            <span class="pull-left">` + encodeURIComponent(chart.axis_x[chartAxisXKey]) + `</span>
-                            <span class="pull-right">` + encodeURIComponent(chart.axis_y[chartAxisXKey]) + `</span>
-                            <div class="clearfix"></div>
-                        </a>
-                    </li>`
-                });
+                footer += ` <div class="box-footer no-padding"> <ul class="nav nav-pills nav-stacked"> `;
+                for (labelKey in chart.labels) {
+                    for (datasetKey in chart.datasets) {
+                        footer += `<li><a href="#">` +
+                            `<span class="pull-right">` +
+                            (chart.datasets.length > 1 ? encodeURIComponent(chart.datasets[datasetKey].label) + ` | ` : ``) +
+                            encodeURIComponent(chart.labels[labelKey]) +
+                            `</span>` +
+                            `<span class="pull-left">` +
+                            encodeURIComponent(chart.datasets[datasetKey].data[labelKey]) +
+                            `</span>` +
+                            `<div class="clearfix"></div></a></li>`
+                    }
+                }
                 footer += `</ul> </div>`;
             }
 
@@ -257,15 +280,15 @@ if ($gridDataProvider) {
                 drawChartPieSingleDataset(
                     chart.div_id,
                     chart.title,
-                    chart.axis_x,
-                    chart.axis_y
+                    chart.labels,
+                    chart.datasets
                 );
             } else {
                 drawChartBarSingleDataset(
                     chart.div_id,
                     chart.title,
-                    chart.axis_x,
-                    chart.axis_y
+                    chart.labels,
+                    chart.datasets
                 );
 
             }

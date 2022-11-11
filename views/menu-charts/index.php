@@ -23,6 +23,15 @@ $columns = [
         },
     ],
     [
+        'attribute' => 'chart_group_by',
+        'value' => function ($dataProviderModel) use ($parentModel) {
+            if ($parentModel) {
+                return $parentModel->getHeaderTitle($dataProviderModel->chart_group_by);
+            }
+            return '';
+        },
+    ],
+    [
         'attribute' => 'chart_aggregation',
         'value' => function ($dataProviderModel) use ($parentModel) {
             return $dataProviderModel::getMenuChartAggregationTitle($dataProviderModel->chart_aggregation);

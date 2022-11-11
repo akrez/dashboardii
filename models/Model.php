@@ -30,6 +30,7 @@ class Model extends BaseModel
             'deleted_at' => 'تاریخ حذف',
             'submenu' => 'ساب منو به ازای هر',
             'chart_axis_y' => 'محور عمودی',
+            'chart_group_by' => 'دسته‌بندی بر اساس',
             'chart_where_like' => 'ردیف هایی نمایش داده شوند که',
             'chart_axis_x' => 'محور افقی',
             'chart_aggregation' => 'نتیجه بر اساس',

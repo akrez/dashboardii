@@ -10,7 +10,7 @@ use app\models\MenuContent;
 use app\models\MenuVisit;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
@@ -109,16 +109,25 @@ class ChartsController extends Controller
         $menu = Crud::findOrFail(Menu::getMenuBaseFindQuery(null, $menuChart->menu_id));
 
         $query = MenuContent::getMenuContentBaseQuery($menu->id);
+
         //chart_axis_x and chart_aggregation
         if ($menuChart->chart_aggregation) {
             $selectExpression = Helper::getSafeExpression($menuChart->chart_aggregation, $menuChart->chart_axis_y);
-            $query->groupBy($menuChart->chart_axis_y);
         } else {
             $selectExpression = $menuChart->chart_axis_y;
-            $query->groupBy('id');
         }
-        $query->addSelect(['axis_x' => $menuChart->chart_axis_x]);
         $query->addSelect(['axis_y' => $selectExpression]);
+
+        $query->addSelect(['axis_x' => $menuChart->chart_axis_x]);
+        $query->addGroupBy($menuChart->chart_axis_x);
+
+        if ($menuChart->chart_group_by) {
+            $query->addSelect(['group_by' => $menuChart->chart_group_by]);
+            $query->addGroupBy($menuChart->chart_group_by);
+        } else {
+            $query->addSelect(['group_by' => new Expression("'$menuChart->title'")]);
+        }
+
         //chart_where_like
         if ('submenu' === $menuChart->chart_where_like and $menu->submenu) {
             if ($submenuTitle) {
@@ -128,20 +137,36 @@ class ChartsController extends Controller
             }
         }
 
-        $result = $query->all();
+        $dbRows = $query->all();
 
-        $axisX = ArrayHelper::getColumn($result, 'axis_x');
-        $axisY = ArrayHelper::getColumn($result, 'axis_y');
-        $axisY = array_map('doubleval', $axisY);
+        $array = [];
+        $axisXs = [];
+        $groups = [];
+        foreach ($dbRows as $dbRow) {
+            $array[$dbRow['axis_x']][$dbRow['group_by']] = doubleval($dbRow['axis_y']);
+            $axisXs[] = $dbRow['axis_x'];
+            $groups[] = $dbRow['group_by'];
+        }
+        $axisXs = array_unique($axisXs);
+        $groups = array_unique($groups);
+        $datasets = [];
+        foreach ($groups as $groupKey => $group) {
+            $datasets[$groupKey]['label'] = $group;
+            foreach ($axisXs as $axisX) {
+                $datasets[$groupKey]['data'][] = (isset($array[$axisX][$group]) ? $array[$axisX][$group] : null);
+            }
+        }
 
-        return [
+        $response = [
             'id' => $menuChart->id,
             'div_id' => 'chart_' . $menuChart->id,
             'title' => $menuChart->title,
-            'axis_x' => $axisX,
-            'axis_y' => $axisY,
+            'labels' => array_values($axisXs),
+            'datasets' => $datasets,
             'width_12' => $menuChart->chart_width_12,
             'chart_type' => $menuChart->chart_type,
         ];
+
+        return $response;
     }
 }

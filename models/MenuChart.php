@@ -13,6 +13,7 @@ use yii\db\ActiveQuery;
  * @property string|null $chart_axis_x
  * @property string|null $chart_where_like
  * @property string|null $chart_axis_y
+ * @property string|null $chart_group_by
  * @property int|null $priority
  * @property string $chart_type
  * @property int $menu_id
@@ -47,7 +48,9 @@ class MenuChart extends ActiveRecord
             //
             [['chart_axis_x'], 'required'],
             [['chart_axis_x'], 'in', 'range' => Menu::getPossibleHeadersList()],
+            [['chart_axis_y'], 'required'],
             [['chart_axis_y'], 'in', 'range' => Menu::getPossibleHeadersList()],
+            [['chart_group_by'], 'in', 'range' => Menu::getPossibleHeadersList()],
             [['chart_type'], 'required'],
             [['chart_type'], 'in', 'range' => array_keys(static::getMenuChartTypesList())],
             [['chart_aggregation'], 'in', 'range' => array_keys(static::getMenuChartAggregationsList())],

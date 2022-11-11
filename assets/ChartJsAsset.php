@@ -13,6 +13,7 @@ class ChartJsAsset extends AssetBundle
     ];
     public $js = [
         'web/plugins/chart.js/Chart.min.js',
+        'web/plugins/chartjs-plugin-labels.min.js',
     ];
     public $depends = [];
 }
